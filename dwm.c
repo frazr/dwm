@@ -36,6 +36,9 @@
 #include <X11/Xlib.h>
 #include <X11/Xproto.h>
 #include <X11/Xutil.h>
+
+#include <syslog.h>
+
 #ifdef XINERAMA
 #include <X11/extensions/Xinerama.h>
 #endif /* XINERAMA */
@@ -155,6 +158,8 @@ typedef struct {
 } Rule;
 
 /* function declarations */
+static void testsyslog();
+
 static void applyrules(Client *c);
 static Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact);
 static void arrange(Monitor *m);
@@ -1345,6 +1350,12 @@ void
 resize(Client *c, int x, int y, int w, int h, Bool interact) {
 	if(applysizehints(c, &x, &y, &w, &h, interact))
 		resizeclient(c, x, y, w, h);
+}
+
+void
+testsyslog() {
+	syslog(LOG_INFO, "test");
+	closelog();
 }
 
 void
