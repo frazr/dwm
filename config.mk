@@ -1,5 +1,5 @@
 # dwm version
-VERSION = 6.0
+VERSION = 6.1
 
 # Customize below to fit your system
 
@@ -7,19 +7,28 @@ VERSION = 6.0
 PREFIX = /usr/local
 MANPREFIX = ${PREFIX}/share/man
 
-# Xinerama
-XINERAMALIBS =  -lXinerama
+X11INC = /usr/X11R6/include
+X11LIB = /usr/X11R6/lib
+
+# Xinerama, comment if you don't want it
+XINERAMALIBS  = -lXinerama
 XINERAMAFLAGS = -DXINERAMA
 
+# freetype
+FREETYPELIBS = -lfontconfig -lXft
+FREETYPEINC = /usr/include/freetype2
+# OpenBSD (uncomment)
+#FREETYPEINC = ${X11INC}/freetype2
+
 # includes and libs
-LIBS = -lc -lX11 ${XINERAMALIBS}
+INCS = -I${X11INC} -I${FREETYPEINC}
+LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${FREETYPELIBS}
 
 # flags
-CPPFLAGS += -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
-#CFLAGS = -g -std=c99 -pedantic -Wall -O0 ${INCS} ${CPPFLAGS}
-CFLAGS += -std=c99 -pedantic -Wall ${CPPFLAGS}
-#LDFLAGS = -g ${LIBS}
-LDFLAGS += -s ${LIBS}
+CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_POSIX_C_SOURCE=2 -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
+#CFLAGS   = -g -std=c99 -pedantic -Wall -O0 ${INCS} ${CPPFLAGS}
+CFLAGS   = -std=c99 -pedantic -Wall -Wno-deprecated-declarations -Os ${INCS} ${CPPFLAGS}
+LDFLAGS  = -s ${LIBS}
 
 # Solaris
 #CFLAGS = -fast ${INCS} -DVERSION=\"${VERSION}\"
