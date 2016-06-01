@@ -58,19 +58,19 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
-static const char *termcmd[]  = { "st", NULL };
+static const char *dmenuappcmd[] = { "dmenu_openapps", NULL };
+static const char *termcmd[]  = { "xterm", NULL };
 static const char *thunarcmd[]  = { "thunar", NULL };
 
 static Key keys[] = {
          /* modifier                     key        function        argument */
          { MODKEY,                       XK_r,      spawn,          {.v = dmenucmd } },
+         { MODKEY,                       XK_p,      spawn,          {.v = dmenuappcmd } },
          { MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
          { MODKEY,                       XK_e,      spawn,          {.v = thunarcmd } },
          { MODKEY,                       XK_b,      togglebar,      {0} },
-
          { MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
          { MODKEY2,                      XK_Tab,    focusstack,     {.i = +1 } },
-
          { MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
          { MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
          { MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
