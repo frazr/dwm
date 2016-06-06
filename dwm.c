@@ -20,6 +20,10 @@
  *
  * To understand everything else, start reading main().
  */
+
+
+#include <syslog.h>
+
 #include <errno.h>
 #include <locale.h>
 #include <signal.h>
@@ -140,6 +144,8 @@ typedef struct {
 	int isfloating;
 	int monitor;
 } Rule;
+
+static void focusfromfile();
 
 /* function declarations */
 static void applyrules(Client *c);
@@ -272,6 +278,54 @@ static Window root;
 
 /* compile-time check if all tags fit into an unsigned int bit array. */
 struct NumTags { char limitexceeded[LENGTH(tags) > 31 ? -1 : 1]; };
+
+void focusfromfile()
+{
+	Monitor *m = NULL;
+	Client *c = NULL;
+
+	FILE *fp;
+	size_t sz;
+	size_t len = 0;
+
+	char *home, *path;
+	char *filename = "/.win";
+	char *line;
+	
+	const Arg *layout = NULL;
+	int filewinid, n;
+
+	home = getenv("HOME");
+	sz = strlen(home) + strlen(filename) + 1;
+
+	if(!(path = malloc(sz)))
+	    exit(1);
+
+	n = snprintf(path, sz, "%s%s", home, filename);
+	if (n < 0 || n >= sz)
+		exit(1);
+	
+	if (!(fp = fopen(path, "r")))
+	  exit(1);
+
+	getline(&line, &len, fp);
+	filewinid = (int)strtol(line, NULL, 0);
+
+	/* Loop all monitors -> clients , check for matching window id */
+	for(m = mons; m; m = m->next)
+	{
+		for(c = m->clients; c; c = c->next)
+		{
+			if(filewinid == (int)c->win) {
+				applyrules(c);
+				focus(c);
+				setlayout(layout);
+			}
+		}
+	}
+	free(line);
+	fclose(fp);
+}
 
 /* function implementations */
 void

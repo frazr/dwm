@@ -65,7 +65,8 @@ static const char *thunarcmd[]  = { "thunar", NULL };
 static Key keys[] = {
          /* modifier                     key        function        argument */
          { MODKEY,                       XK_r,      spawn,          {.v = dmenucmd } },
-         { MODKEY,                       XK_p,      spawn,          {.v = dmenuappcmd } },
+         { MODKEY,                       XK_p,      spawn,		      {.v = dmenuappcmd} },
+         { MODKEY,                       XK_g,      focusfromfile,	{0} },
          { MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
          { MODKEY,                       XK_e,      spawn,          {.v = thunarcmd } },
          { MODKEY,                       XK_b,      togglebar,      {0} },
